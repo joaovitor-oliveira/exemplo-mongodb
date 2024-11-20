@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - mongo
+    networks:
+      - laravel
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - laravel
+
+volumes:
+  mongodbdata:
+
+networks:
+  laravel:
+    driver: bridge
