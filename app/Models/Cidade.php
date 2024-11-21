@@ -25,4 +25,9 @@ class Cidade extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class);
+    }
 }

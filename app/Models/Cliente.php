@@ -15,6 +15,7 @@ class Cliente extends Model
         'nome',
         'email',
         'telefone',
+        'cidade_id',
     ];
 
     protected $hidden = [
@@ -26,4 +27,9 @@ class Cliente extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+    public function cidade()
+    {
+        return $this->belongsTo(Cidade::class);
+    }
 }

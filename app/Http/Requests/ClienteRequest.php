@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class ClienteRequest extends FormRequest
 {
@@ -17,6 +19,7 @@ class ClienteRequest extends FormRequest
             'nome' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:clientes,email',
             'telefone' => 'required|string|max:20',
+            'cidade' => 'required|exists:cidades,_id',
         ];
     }
 
@@ -33,6 +36,23 @@ class ClienteRequest extends FormRequest
             'telefone.required' => 'O telefone é obrigatório.',
             'telefone.string' => 'O telefone deve ser uma string.',
             'telefone.max' => 'O telefone não pode ter mais que 20 caracteres.',
+            'cidade_id.required' => 'A cidade é obrigatória.',
+            'cidade_id.exists' => 'A cidade informada não existe.',
         ];
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors()
+        ], 422));
     }
 }

@@ -18,6 +18,7 @@ return new class extends Migration
             $collection->string('nome');
             $collection->string('email');
             $collection->string('telefone');
+            $collection->foreignId('cidade_id')->constrained('cidades');
             $collection->timestamps();
             $collection->softDeletes();
         });

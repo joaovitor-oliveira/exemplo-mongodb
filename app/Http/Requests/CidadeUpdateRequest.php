@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class CidadeUpdateRequest extends FormRequest
 {
@@ -23,7 +25,32 @@ class CidadeUpdateRequest extends FormRequest
     {
         return [
             'nome' => 'nullable|string|max:100',
-            'estado' => 'nullable|string|max:2',
+            'estado' => 'nullable|string|in:AC,AL,AP,AM,BA,CE,DF,ES,GO,MA,MT,MS,MG,PA,PB,PR,PE,PI,RJ,RN,RS,RO,RR,SC,SP,SE,TO',
         ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'nome.string' => 'O campo nome deve ser uma string',
+            'nome.max' => 'O campo nome deve ter no máximo 100 caracteres',
+            'estado.string' => 'O campo estado deve ser uma string',
+            'estado.in' => 'O campo estado deve ser um dos seguintes valores: AC, AL, AP, AM, BA, CE, DF, ES, GO, MA, MT, MS, MG, PA, PB, PR, PE, PI, RJ, RN, RS, RO, RR, SC, SP, SE, TO',
+        ];
+    }
+
+    /**
+     * Handle a failed validation attempt.
+     *
+     * @param  \Illuminate\Contracts\Validation\Validator  $validator
+     * @return void
+     *
+     * @throws \Illuminate\Http\Exceptions\HttpResponseException
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json([
+            'errors' => $validator->errors()
+        ], 422));
     }
 }
